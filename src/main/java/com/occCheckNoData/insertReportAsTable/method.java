@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 public class method {
 
 	public static String Date, Time, link;
-	public static String NumberOfErrors=null;
 	public static  String status;
 	public static String projectName=null; 
 	public static String JENKINS_HOME=null;
@@ -18,7 +17,11 @@ public class method {
 	public static String timeStamp=null;
 	public static String Application=null;
 	public static String jsonPath=null;
-	public static String Scenarios=null;
+	public static String Scenarios="null";
+	public static int NumberOfErrors=0;
+	public static int Scenario=0;
+	public static int greyTile=0;
+	
 	
 	public static void tacCheckScenarios(File log) throws IOException {
 		FileReader fileReader = new FileReader(log);
@@ -50,24 +53,20 @@ public class method {
 							Scenarios= Scenarios.concat(" ").concat(words[i]);
 							
 						}
+						  
+						words=Scenarios.split(",");
 						
+						Scenario= words.length;
 						}
 					
 						
 					
 		         }
 			 }
-			if (Scenarios==null) {
-				
-                           Scenarios="No issues";
-				
-			}
-		}
-			
-		else {
-			Scenarios="N/A";
 			
 		}
+			
+		
 		
 		
 		fileReader.close();
@@ -129,6 +128,29 @@ public static void appNames() throws IOException {
 		fileReader.close();
 	}
 	
+public static void assertion(File log) throws IOException {
+		
+		FileReader fileReader = new FileReader(log);  
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String[] lineTab=null;
+		String s;
+		String input1="NotReacheable_ERR_CONNECTION_TIMED_OUT";
+		while((s=bufferedReader.readLine())!=null)
+		 {
+			lineTab=s.split(" ");
+		for (String word : lineTab)
+    	{     
+    		
+    		if (word.equals(input1)) {
+    			
+    			status=status.concat(" ").concat("( system not Reachable)") ;
+    		}
+    	}
+		 }
+		
+		fileReader.close();
+	}
+	
 public static void linkGetter(File log) throws IOException {
 		
 		FileReader fileReader = new FileReader(log);  
@@ -153,7 +175,6 @@ public static void linkGetter(File log) throws IOException {
     		}
     	}
 		 }
-		System.out.println(link);
 		fileReader.close();
 	}
 	
@@ -162,48 +183,79 @@ public static void linkGetter(File log) throws IOException {
 		BufferedReader buffereader = new BufferedReader(fileReader);
 		String[] words=null;
 		String input1="theResultIs";
-		String input2="chikiwi";
 		String s;
-		int count=0;
-		if(Application.equals("OCC") ){
+		
+		
+		if(Application.equals("OCC")){
+			
+			while(((s=buffereader.readLine())!=null))
+			 {
+				
+				words=s.split(" "); 
+				String temp="null";
+				for (String word : words) 
+				{
+					if(word.equals("RESULT"))
+						temp="ok";
+					
+					if(temp.equals("ok") && word.equals(input1)){
+					int y;
+					y=words.length;
+
+						String string= words[y-1];
+
+						NumberOfErrors=Integer.parseInt(string);
+						
+						}
+                   
+					
+					
+					
+					
+					
+		         }
+			 }
+			 }
+			
+			
+		
+		
+		fileReader.close();
+	}
+	
+	public static void opeTileCheck(File log) throws IOException {
+		FileReader fileReader = new FileReader(log);
+		BufferedReader buffereader = new BufferedReader(fileReader);
+		String[] words=null;
+		String input1="theResultIs";
+		String s;
+		if(Application.equals("OPE") ){
 			
 			while(((s=buffereader.readLine())!=null))
 			 {
 				words=s.split(" "); 
+				String temp="null";
 				for (String word : words) 
 				{
-					if (word.equals(input1)) {
-						int y;
-						y=words.length;
-						NumberOfErrors= words[y-1];
-						
-						}
-					else if ((word.equals(input2))&&(count<2)) {
-						
-						NumberOfErrors= "instance not found";
-						
-						}
-					else if(word.equals("chakala")) {NumberOfErrors="No authorization found";}
-						
-						
+					if(word.equals("RESULT"))
+						temp="ok";
 					
-		         }
+					if(temp.equals("ok") && word.equals(input1)){
+					int y;
+					y=words.length;
+
+						String string= words[y-1];
+
+						greyTile=Integer.parseInt(string);
+						
+						}
 			 }
-			if ((NumberOfErrors.equals("chakala")==false)&&(NumberOfErrors.equals("No authorization found")==false)&&(NumberOfErrors.equals("instance not found")==false)&&(NumberOfErrors.length()>3)) {
-				
-				NumberOfErrors="other error";
+			
 			}
+		
 		}
-			
-		else {
-			NumberOfErrors="N/A";
-			
-		}
-		System.out.println(method.NumberOfErrors);
-		if((NumberOfErrors.equals("instance not found")==false)&&(NumberOfErrors.equals("N/A")==false)&&(NumberOfErrors.equals("other error")==false)&&(NumberOfErrors.equals("No authorization found")==false)) {
-		int z =Integer.valueOf(NumberOfErrors);
-		if(z<2) {NumberOfErrors= NumberOfErrors.concat(" Gadget impacted"); }else {NumberOfErrors= NumberOfErrors.concat(" Gadgets impacted");}
-		}
+		
+		
 		fileReader.close();
 	}
 	
@@ -215,21 +267,32 @@ public static void linkGetter(File log) throws IOException {
 		if (Application.equals("OCC"))
 		{
 		jsonObject.put("Application", Application);
-		jsonObject.put("JOB_NAME", JOB_NAME);
-		jsonObject.put("JOB_STATUS", status);
-		jsonObject.put("JOB_ERRORS", NumberOfErrors);	
+		jsonObject.put("Test_Case_Name", JOB_NAME);
+		jsonObject.put("Test_Status", status);
+		jsonObject.put("Number_Of_Errors", NumberOfErrors);	
 		jsonObject.put("DATE1", timeStamp );
-		jsonObject.put("INSTANCE_LINK" , link);
+		
 			
 		}
 		if (Application.equals("TAC"))
 		{
 		jsonObject.put("Application", Application);
-		jsonObject.put("JOB_NAME", JOB_NAME);
-		jsonObject.put("JOB_STATUS", status);
-		jsonObject.put("JOB_ERRORS", Scenarios);	
-		jsonObject.put("DATE1", timeStamp );
-		jsonObject.put("INSTANCE_LINK" , link);
+		jsonObject.put("Test_Case_Name", JOB_NAME);
+		jsonObject.put("Test_Status", status);
+		jsonObject.put("Number_Of_Errors", Scenario);	
+		jsonObject.put("DATE1", Date );
+		
+			
+		}
+		
+		if (Application.equals("OPE"))
+		{
+		jsonObject.put("Application", Application);
+		jsonObject.put("Test_Case_Name", JOB_NAME);
+		jsonObject.put("Test_Status", status);
+		jsonObject.put("Number_Of_Errors", greyTile);	
+		jsonObject.put("DATE1", Date );
+		
 			
 		}
 		
@@ -269,7 +332,7 @@ public static void linkGetter(File log) throws IOException {
 			}
 			
 			}
-			fileReader.close();
+			
 		 }
 		
 	
@@ -277,7 +340,7 @@ public static void linkGetter(File log) throws IOException {
 		
 		
 		
-				
+		fileReader.close();		
 	}
 	
 	

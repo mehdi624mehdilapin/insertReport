@@ -3,6 +3,10 @@
   <groupId>com.occCheckNoData.insertReportAsTable</groupId>
   <artifactId>insertReportAsTable</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+<properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+</properties>
   <build>
   <plugins>
   <plugin>
@@ -30,6 +34,16 @@
 </plugins>
 </build>
   <dependencies>
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.12</version>
+</dependency>
+  <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.0</version>
+</dependency>
    <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
@@ -44,12 +58,7 @@
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
     <version>1.9</version>
-</dependency>
-<dependency>
-		<groupId>org.apache.httpcomponents</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>4.5.12</version>
-	</dependency>
+   </dependency>
 	<dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-io</artifactId>
