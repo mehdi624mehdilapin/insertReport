@@ -2,28 +2,104 @@ package com.occCheckNoData.insertReportAsTable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+
+import javax.naming.AuthenticationException;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
 public class method {
 
-	public static String Date, Time, link;
-	public static  String status;
-	public static String projectName=null; 
-	public static String JENKINS_HOME=null;
-	public static String JOB_NAME=null;
-	public static String BUILD_NUMBER=null;
-	public static String timeStamp=null;
-	public static String Application=null;
-	public static String jsonPath=null;
-	public static String Scenarios="null";
-	public static int NumberOfErrors=0;
-	public static int Scenario=0;
-	public static int greyTile=0;
+	private static  String Date, Time, link;
+	private static  String status; 
+	private static  String JENKINS_HOME=null;
+	private static  String JOB_NAME=null;
+	private static  String BUILD_NUMBER=null;
+	private static  String timeStamp=null;
+	private static  String Application=null;
+	private static  String jsonPath=null;
+	private static  String Scenarios="null";
+	private static  int NumberOfErrors=0;
+	private static  int Scenario=0;
+	private static  int greyTile=0;
 	
 	
-	public static void tacCheckScenarios(File log) throws IOException {
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	public static void  function1() throws AuthenticationException
+	
+	{
+		try {
+		
+		JENKINS_HOME =System.getenv("JENKINS_HOME");
+		JOB_NAME =System.getenv("JOB_NAME");
+		BUILD_NUMBER=System.getenv("BUILD_NUMBER");
+		String logLink= JENKINS_HOME.concat("//jobs//").concat(JOB_NAME).concat("//builds//").concat(BUILD_NUMBER).concat("//log");
+		String CREDENTIALS= JENKINS_HOME.concat("//").concat("credentials.txt");
+		
+		setJsonPath();
+		
+		JSONArray array=new JSONArray();
+		 
+		JSONObject  jsonObject1=new JSONObject();
+		 
+		 File log= new File(logLink);
+		 File credentials= new File(CREDENTIALS); 
+		 
+		getStatus(log);
+		
+		instanceNotReachable(log);
+		
+        getLink(log);
+        
+		getAppName();
+		
+		getNumberOfErrorsOcc(log);
+		
+		getNumberOfErrorsTac(log);
+		
+		getNumberOfErrorsOpe(log);
+
+		timeStamp(log);
+
+		putDataInObject(jsonObject1);
+		
+		array.add(jsonObject1);
+		
+		FileWriter file = new FileWriter(jsonPath);
+        file.write(array.toJSONString());
+        file.close();
+        
+        httpClient.getUserAndPassword(credentials);
+        httpClient.sendJsonFile();
+        
+     } catch (IOException e) {
+        
+   	 
+        e.printStackTrace();
+     }
+		
+		
+	}
+	
+	public static String getter() {
+		
+		return jsonPath;
+	}
+	
+	
+	
+	
+	
+   
+	
+	
+	private static void getNumberOfErrorsTac(File log) throws IOException {
 		FileReader fileReader = new FileReader(log);
 		BufferedReader buffereader = new BufferedReader(fileReader);
 		String[] words=null;
@@ -72,7 +148,7 @@ public class method {
 		fileReader.close();
 	}
 	
-public static void appNames() throws IOException {
+private static void getAppName() throws IOException {
 		
 	String[] Table =link.split("/");
 	
@@ -98,13 +174,13 @@ public static void appNames() throws IOException {
 		
 	}
    
-	public static void setJsonPath() throws IOException {
+	private static void setJsonPath() throws IOException {
 		
 		jsonPath = JENKINS_HOME.concat("\\json.txt");
 		
 	}
 	
-	public static void projeStatus(File log) throws IOException {
+	private static void getStatus(File log) throws IOException {
 		
 		FileReader fileReader = new FileReader(log);  
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -128,7 +204,7 @@ public static void appNames() throws IOException {
 		fileReader.close();
 	}
 	
-public static void assertion(File log) throws IOException {
+private static void instanceNotReachable(File log) throws IOException {
 		
 		FileReader fileReader = new FileReader(log);  
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -151,7 +227,7 @@ public static void assertion(File log) throws IOException {
 		fileReader.close();
 	}
 	
-public static void linkGetter(File log) throws IOException {
+private static void getLink(File log) throws IOException {
 		
 		FileReader fileReader = new FileReader(log);  
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -178,7 +254,7 @@ public static void linkGetter(File log) throws IOException {
 		fileReader.close();
 	}
 	
-	public static void occErrorNumberCheck(File log) throws IOException {
+	private static void getNumberOfErrorsOcc(File log) throws IOException {
 		FileReader fileReader = new FileReader(log);
 		BufferedReader buffereader = new BufferedReader(fileReader);
 		String[] words=null;
@@ -207,12 +283,7 @@ public static void linkGetter(File log) throws IOException {
 						NumberOfErrors=Integer.parseInt(string);
 						
 						}
-                   
-					
-					
-					
-					
-					
+
 		         }
 			 }
 			 }
@@ -223,7 +294,7 @@ public static void linkGetter(File log) throws IOException {
 		fileReader.close();
 	}
 	
-	public static void opeTileCheck(File log) throws IOException {
+	private static void getNumberOfErrorsOpe(File log) throws IOException {
 		FileReader fileReader = new FileReader(log);
 		BufferedReader buffereader = new BufferedReader(fileReader);
 		String[] words=null;
@@ -262,7 +333,7 @@ public static void linkGetter(File log) throws IOException {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void putData(JSONObject jsonObject) {
+	private static void putDataInObject(JSONObject jsonObject) {
 		
 		if (Application.equals("OCC"))
 		{
@@ -295,12 +366,10 @@ public static void linkGetter(File log) throws IOException {
 		
 			
 		}
-		
-		
-		
+
 	}
 	
-	public static void timeStamp(File log) throws IOException {
+	private static void timeStamp(File log) throws IOException {
 		
 		FileReader fileReader = new FileReader(log);
 		BufferedReader buffereader = new BufferedReader(fileReader);
@@ -334,15 +403,8 @@ public static void linkGetter(File log) throws IOException {
 			}
 			
 		 }
-		
-	
-		
-		
-		
-		
+
 		fileReader.close();		
 	}
-	
-	
-	
+
 }

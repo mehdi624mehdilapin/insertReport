@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.naming.AuthenticationException;
-
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -70,12 +69,12 @@ public class httpClient {
 	}
  
 	
-	public static void send() throws ClientProtocolException, IOException, AuthenticationException{ 
+	public static void sendJsonFile() throws ClientProtocolException, IOException, AuthenticationException{ 
 		
-		File file = new File(method.jsonPath);
+		File file = new File(method.getter());
 		
 		FileEntity entity = new FileEntity(file, 
-		    ContentType.create("plain/text", "UTF-8"));
+		ContentType.create("plain/text", "UTF-8"));
         HttpPost httppost = new HttpPost(URL);
         HttpGet httpget = new HttpGet(URL);
         
