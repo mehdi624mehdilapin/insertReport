@@ -76,7 +76,10 @@ public class method {
         file.close();
         
         httpClient.getUserAndPassword(credentials);
-        httpClient.sendJsonFile();
+        
+        httpClient.sendJsonFile(httpClient.getter1());
+        
+        httpClient.sendJsonFile(httpClient.getter2());
         
      } catch (IOException e) {
         
@@ -305,16 +308,11 @@ private static void getLink(File log) throws IOException {
 			while(((s=buffereader.readLine())!=null))
 			 {
 				words=s.split(" "); 
-				String temp="null";
 				for (String word : words) 
 				{
-					if(word.equals("RESULT"))
-						temp="ok";
-					
-					if(temp.equals("ok") && word.equals(input1)){
-					int y;
-					y=words.length;
-
+					if(word.equals(input1))
+					{
+						 int y=words.length;
 						String string= words[y-1];
 
 						greyTile=Integer.parseInt(string);

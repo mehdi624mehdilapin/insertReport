@@ -9,6 +9,7 @@ public class insertReportAsTable {
 	public static void main(String[] args) throws IOException, AuthenticationException, javax.naming.AuthenticationException {
 		
 		method.function1();
+		
       
 		
 	}

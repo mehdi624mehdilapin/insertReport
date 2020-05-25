@@ -26,8 +26,10 @@ import org.apache.http.impl.client.HttpClients;
 
 public class httpClient {
 	
-	private static  String URL= null;
+	private static  String URL1= null;
 
+	private static  String URL2= null;
+    
     private static  String PASSWORD =null;
 
     private static  String USER = null;
@@ -38,7 +40,8 @@ public class httpClient {
 		String[] words=null;
 		String input1="USER" ;
 		String input2="PASSWORD" ;
-		String input3="URL" ;
+		String input3="URL1" ;
+		String input4="URL2" ;
 		String s;
 			
 			while(((s=buffereader.readLine())!=null))
@@ -53,13 +56,18 @@ public class httpClient {
 						USER=words[1];
 					   
 						}
-					else if (word.equals(input2)) {
+					if (word.equals(input2)) {
 						
-						PASSWORD=words[1];  
+						PASSWORD =words[1];  
 					}
-					else if (word.equals(input3)) {
+					
+                    if (word.equals(input3)) {
 						
-						URL=words[1];  
+						URL1 =words[1];  
+					}
+					if (word.equals(input4)) {
+						
+						URL2=words[1];  
 					}
 
 		         }
@@ -67,9 +75,18 @@ public class httpClient {
 
 		fileReader.close();
 	}
+    
+    public static String getter1 () {
+    	
+    	return URL1;
+    }
+    public static String getter2 () {
+    	
+    	return URL2;
+    }
  
 	
-	public static void sendJsonFile() throws ClientProtocolException, IOException, AuthenticationException{ 
+	public static void sendJsonFile(String URL) throws ClientProtocolException, IOException, AuthenticationException{ 
 		
 		File file = new File(method.getter());
 		
